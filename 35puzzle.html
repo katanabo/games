@@ -16,11 +16,12 @@
             margin: 0;
             font-family: Arial, sans-serif;
             background-color: #f0f0f0;
+            flex-direction: column;
         }
         .container {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(4, 1fr);
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(6, 1fr);
             gap: 5px;
             width: 90vmin;
             height: 90vmin;
@@ -40,23 +41,32 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             user-select: none;
+            transition: transform 0.05s ease-in-out; /* Fast transition */
         }
         .empty {
             background-color: #ccc;
             border: none;
             cursor: default;
         }
+        #timer {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
+    <div id="timer">Time: 0.00s</div>
     <div class="container" id="puzzle-container"></div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const container = document.getElementById('puzzle-container');
-            const size = 4;
+            const timerElement = document.getElementById('timer');
+            const size = 6;
             let tiles = Array.from({ length: size * size }, (_, i) => i);
             let emptyTile = size * size - 1;
+            let startTime = null;
+            let interval = null;
 
             // Shuffle tiles
             function shuffle(array) {
@@ -101,28 +111,30 @@
                     const validMoves = getValidMoves(emptyIndex);
                     const validMovesTwoSteps = getValidMovesTwoSteps(emptyIndex);
                     const validMovesThreeSteps = getValidMovesThreeSteps(emptyIndex);
+                    const validMovesFourSteps = getValidMovesFourSteps(emptyIndex);
+                    const validMovesFiveSteps = getValidMovesFiveSteps(emptyIndex);
+
+                    if (!startTime) {
+                        startTime = new Date();
+                        interval = setInterval(updateTimer, 100);
+                    }
 
                     if (validMoves.includes(tileIndex)) {
                         moveTiles(tileIndex, emptyIndex);
                         updateTiles();
                     } else if (validMovesTwoSteps.includes(tileIndex)) {
-                        const intermediateTileIndex = getIntermediateTileIndex(emptyIndex, tileIndex);
-                        moveTiles(intermediateTileIndex, emptyIndex);
-                        setTimeout(() => {
-                            moveTiles(tileIndex, intermediateTileIndex);
-                            updateTiles();
-                        }, 100); // Adding a slight delay to visualize the intermediate step
+                        moveMultipleTiles(tileIndex, emptyIndex, 2);
                     } else if (validMovesThreeSteps.includes(tileIndex)) {
-                        const firstIntermediateTileIndex = getIntermediateTileIndex(emptyIndex, getIntermediateTileIndex(emptyIndex, tileIndex));
-                        const secondIntermediateTileIndex = getIntermediateTileIndex(firstIntermediateTileIndex, tileIndex);
-                        moveTiles(firstIntermediateTileIndex, emptyIndex);
-                        setTimeout(() => {
-                            moveTiles(secondIntermediateTileIndex, firstIntermediateTileIndex);
-                            setTimeout(() => {
-                                moveTiles(tileIndex, secondIntermediateTileIndex);
-                                updateTiles();
-                            }, 100); // Adding a slight delay to visualize the intermediate step
-                        }, 100);
+                        moveMultipleTiles(tileIndex, emptyIndex, 3);
+                    } else if (validMovesFourSteps.includes(tileIndex)) {
+                        moveMultipleTiles(tileIndex, emptyIndex, 4);
+                    } else if (validMovesFiveSteps.includes(tileIndex)) {
+                        moveMultipleTiles(tileIndex, emptyIndex, 5);
+                    }
+
+                    if (isPuzzleSolved()) {
+                        clearInterval(interval);
+                        alert(`おめでとうゲームクリア! あなたのタイムは ${(new Date() - startTime) / 1000}秒です`);
                     }
                 });
             });
@@ -169,6 +181,34 @@
                 return moves;
             }
 
+            // Get valid moves (4 steps away)
+            function getValidMovesFourSteps(emptyIndex) {
+                const row = Math.floor(emptyIndex / size);
+                const col = emptyIndex % size;
+                const moves = [];
+
+                if (col > 3) moves.push(emptyIndex - 4); // Four steps Left
+                if (col < size - 4) moves.push(emptyIndex + 4); // Four steps Right
+                if (row > 3) moves.push(emptyIndex - 4 * size); // Four steps Up
+                if (row < size - 4) moves.push(emptyIndex + 4 * size); // Four steps Down
+
+                return moves;
+            }
+
+            // Get valid moves (5 steps away)
+            function getValidMovesFiveSteps(emptyIndex) {
+                const row = Math.floor(emptyIndex / size);
+                const col = emptyIndex % size;
+                const moves = [];
+
+                if (col > 4) moves.push(emptyIndex - 5); // Five steps Left
+                if (col < size - 5) moves.push(emptyIndex + 5); // Five steps Right
+                if (row > 4) moves.push(emptyIndex - 5 * size); // Five steps Up
+                if (row < size - 5) moves.push(emptyIndex + 5 * size); // Five steps Down
+
+                return moves;
+            }
+
             // Get intermediate tile index
             function getIntermediateTileIndex(emptyIndex, tileIndex) {
                 const row = Math.floor(emptyIndex / size);
@@ -182,6 +222,31 @@
                     return (row < tileRow) ? emptyIndex + size : emptyIndex - size;
                 }
                 return -1; // Should not reach here
+            }
+
+            // Move multiple tiles
+            function moveMultipleTiles(tileIndex, emptyIndex, steps) {
+                const intermediateIndices = [];
+                let currentEmptyIndex = emptyIndex;
+
+                for (let i = 0; i < steps; i++) {
+                    const nextIndex = getIntermediateTileIndex(currentEmptyIndex, tileIndex);
+                    intermediateIndices.push(nextIndex);
+                    currentEmptyIndex = nextIndex;
+                }
+
+                intermediateIndices.forEach((intermediateIndex, i) => {
+                    setTimeout(() => {
+                        moveTiles(intermediateIndex, emptyIndex);
+                        updateTiles();
+                        emptyIndex = intermediateIndex;
+                    }, i * 2); // Adjust timing here for faster animation
+                });
+
+                setTimeout(() => {
+                    moveTiles(tileIndex, emptyIndex);
+                    updateTiles();
+                }, steps * 2); // Adjust timing here for faster animation
             }
 
             // Move tiles
@@ -198,6 +263,23 @@
                     tile.textContent = num === 0 ? '' : num;
                     tile.classList.toggle('empty', num === 0);
                 });
+            }
+
+            // Update timer
+            function updateTimer() {
+                const currentTime = new Date();
+                const elapsedTime = (currentTime - startTime) / 1000;
+                timerElement.textContent = `Time: ${elapsedTime.toFixed(2)}s`;
+            }
+
+            // Check if puzzle is solved
+            function isPuzzleSolved() {
+                for (let i = 0; i < tiles.length - 1; i++) {
+                    if (tiles[i] !== i + 1) {
+                        return false;
+                    }
+                }
+                return tiles[tiles.length - 1] === 0;
             }
 
             updateTiles();
