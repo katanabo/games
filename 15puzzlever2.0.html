@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>15パズル</title>
+    <style>
+        html {
+            overflow: hidden;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 5px;
+            width: 90vmin;
+            height: 90vmin;
+            max-width: 400px;
+            max-height: 400px;
+            background-color: #ccc;
+            padding: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .tile {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            background-color: #fff;
+            border: 2px solid #999;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            user-select: none;
+        }
+        .empty {
+            background-color: #ccc;
+            border: none;
+            cursor: default;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="puzzle-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('puzzle-container');
+            const size = 4;
+            let tiles = Array.from({ length: size * size }, (_, i) => i);
+            let emptyTile = size * size - 1;
+
+            // Shuffle tiles
+            function shuffle(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            // Check if the puzzle is solvable
+            function isSolvable(array) {
+                let invCount = 0;
+                for (let i = 0; i < array.length - 1; i++) {
+                    for (let j = i + 1; j < array.length; j++) {
+                        if (array[i] > array[j] && array[i] && array[j]) invCount++;
+                    }
+                }
+                const emptyRow = Math.floor(array.indexOf(0) / size);
+                return (invCount % 2 === 0 && emptyRow % 2 !== 0) || (invCount % 2 !== 0 && emptyRow % 2 === 0);
+            }
+
+            do {
+                shuffle(tiles);
+            } while (!isSolvable(tiles));
+
+            // Create tiles
+            tiles.forEach((num, index) => {
+                const tile = document.createElement('div');
+                tile.classList.add('tile');
+                if (num === 0) {
+                    tile.classList.add('empty');
+                } else {
+                    tile.textContent = num;
+                }
+                container.appendChild(tile);
+
+                // Add click event
+                tile.addEventListener('click', () => {
+                    const tileIndex = index;
+                    const emptyIndex = tiles.indexOf(0);
+                    const validMoves = getValidMoves(emptyIndex);
+                    const validMovesTwoSteps = getValidMovesTwoSteps(emptyIndex);
+                    const validMovesThreeSteps = getValidMovesThreeSteps(emptyIndex);
+
+                    if (validMoves.includes(tileIndex)) {
+                        moveTiles(tileIndex, emptyIndex);
+                        updateTiles();
+                    } else if (validMovesTwoSteps.includes(tileIndex)) {
+                        const intermediateTileIndex = getIntermediateTileIndex(emptyIndex, tileIndex);
+                        moveTiles(intermediateTileIndex, emptyIndex);
+                        setTimeout(() => {
+                            moveTiles(tileIndex, intermediateTileIndex);
+                            updateTiles();
+                        }, 100); // Adding a slight delay to visualize the intermediate step
+                    } else if (validMovesThreeSteps.includes(tileIndex)) {
+                        const firstIntermediateTileIndex = getIntermediateTileIndex(emptyIndex, getIntermediateTileIndex(emptyIndex, tileIndex));
+                        const secondIntermediateTileIndex = getIntermediateTileIndex(firstIntermediateTileIndex, tileIndex);
+                        moveTiles(firstIntermediateTileIndex, emptyIndex);
+                        setTimeout(() => {
+                            moveTiles(secondIntermediateTileIndex, firstIntermediateTileIndex);
+                            setTimeout(() => {
+                                moveTiles(tileIndex, secondIntermediateTileIndex);
+                                updateTiles();
+                            }, 100); // Adding a slight delay to visualize the intermediate step
+                        }, 100);
+                    }
+                });
+            });
+
+            // Get valid moves (1 step away)
+            function getValidMoves(emptyIndex) {
+                const row = Math.floor(emptyIndex / size);
+                const col = emptyIndex % size;
+                const moves = [];
+
+                if (col > 0) moves.push(emptyIndex - 1); // Left
+                if (col < size - 1) moves.push(emptyIndex + 1); // Right
+                if (row > 0) moves.push(emptyIndex - size); // Up
+                if (row < size - 1) moves.push(emptyIndex + size); // Down
+
+                return moves;
+            }
+
+            // Get valid moves (2 steps away)
+            function getValidMovesTwoSteps(emptyIndex) {
+                const row = Math.floor(emptyIndex / size);
+                const col = emptyIndex % size;
+                const moves = [];
+
+                if (col > 1) moves.push(emptyIndex - 2); // Two steps Left
+                if (col < size - 2) moves.push(emptyIndex + 2); // Two steps Right
+                if (row > 1) moves.push(emptyIndex - 2 * size); // Two steps Up
+                if (row < size - 2) moves.push(emptyIndex + 2 * size); // Two steps Down
+
+                return moves;
+            }
+
+            // Get valid moves (3 steps away)
+            function getValidMovesThreeSteps(emptyIndex) {
+                const row = Math.floor(emptyIndex / size);
+                const col = emptyIndex % size;
+                const moves = [];
+
+                if (col > 2) moves.push(emptyIndex - 3); // Three steps Left
+                if (col < size - 3) moves.push(emptyIndex + 3); // Three steps Right
+                if (row > 2) moves.push(emptyIndex - 3 * size); // Three steps Up
+                if (row < size - 3) moves.push(emptyIndex + 3 * size); // Three steps Down
+
+                return moves;
+            }
+
+            // Get intermediate tile index
+            function getIntermediateTileIndex(emptyIndex, tileIndex) {
+                const row = Math.floor(emptyIndex / size);
+                const col = emptyIndex % size;
+                const tileRow = Math.floor(tileIndex / size);
+                const tileCol = tileIndex % size;
+
+                if (row === tileRow) {
+                    return (col < tileCol) ? emptyIndex + 1 : emptyIndex - 1;
+                } else if (col === tileCol) {
+                    return (row < tileRow) ? emptyIndex + size : emptyIndex - size;
+                }
+                return -1; // Should not reach here
+            }
+
+            // Move tiles
+            function moveTiles(tileIndex, emptyIndex) {
+                const temp = tiles[emptyIndex];
+                tiles[emptyIndex] = tiles[tileIndex];
+                tiles[tileIndex] = temp;
+            }
+
+            // Update tiles
+            function updateTiles() {
+                container.childNodes.forEach((tile, index) => {
+                    const num = tiles[index];
+                    tile.textContent = num === 0 ? '' : num;
+                    tile.classList.toggle('empty', num === 0);
+                });
+            }
+
+            updateTiles();
+        });
+    </script>
+</body>
+</html>
