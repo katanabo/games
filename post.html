@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ブログ - My Retro Home Page</title>
+    <title>ブログ記事 - My Retro Home Page</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DotGothic16&family=Roboto&display=swap');
         body {
@@ -41,27 +41,19 @@
             padding: 20px;
             max-width: 800px;
             margin: 0 auto;
-        }
-        .blog-list {
-            list-style: none;
-            padding: 0;
-        }
-        .blog-list li {
-            background: #333;
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #fff;
+            background-color: #fff;
+            color: #000;
+            border-radius: 10px;
             text-align: left;
-            cursor: pointer;
-            font-family: 'Roboto', sans-serif; /* 読みやすいフォントに変更 */
+            font-family: 'Roboto', sans-serif; /* 記事内のフォントをRobotoに設定 */
         }
-        .blog-list li h3 {
-            margin: 0 0 10px 0;
-            font-size: 1.2em; /* タイトルを大きく */
+        .content h1 {
+            font-size: 1em; /* タイトルのサイズを小さく */
+            margin-bottom: 20px;
         }
-        .blog-list li p {
-            margin: 0 0 10px 0;
-            font-size: 0.9em; /* 文字のサイズを調整 */
+        .content p {
+            font-size: 0.8em; /* 文字のサイズを少し小さく */
+            line-height: 1.5;
         }
         @media (max-width: 600px) {
             nav a {
@@ -81,32 +73,25 @@
             <a href="games.html">ゲーム一覧</a>
         </nav>
     </header>
-    <div class="content">
-        <h2>ブログ</h2>
-        <ul class="blog-list" id="blog-list">
-            <!-- ブログ記事のリスト -->
-        </ul>
+    <div class="content" id="post-content">
+        <!-- ブログ記事の内容 -->
     </div>
     <script>
         $(document).ready(function() {
-            const posts = [
-                { file: "posts/post1.md" },
-                { file: "posts/post2.md" },
-                { file: "posts/post3.md" }
-            ];
-            const blogList = $('#blog-list');
-    
-            posts.forEach(post => {
-                $.get(post.file, function(data) {
+            const urlParams = new URLSearchParams(window.location.search);
+            const file = urlParams.get('file');
+            if (file) {
+                $.get(file, function(data) {
                     const lines = data.split('\n');
                     const title = lines[0].replace(/^#\s*/, ''); // Markdownのタイトル行を取得
-                    const excerpt = lines.slice(1).join(' ').replace(/<\/?[^>]+(>|$)/g, "").slice(0, 100); // 最初の100文字を抜粋し、HTMLタグを除去
-                    const li = $('<li></li>');
-                    li.html(`<h3>${title}</h3><p>${excerpt}...</p>`);
-                    li.click(() => window.location.href = `post.html?file=${post.file}`);
-                    blogList.append(li);
+                    const content = lines.slice(1).join('\n'); // タイトル行を除いたコンテンツ
+                    const htmlContent = marked.parse(content);
+                    const postContent = $('#post-content');
+                    postContent.html(`<h1>${title}</h1>${htmlContent}`);
                 });
-            });
+            } else {
+                $('#post-content').html('<p>記事が見つかりませんでした。</p>');
+            }
         });
     </script>
 </body>
