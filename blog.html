@@ -59,6 +59,8 @@
     </style>
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
     <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <header>
@@ -74,21 +76,20 @@
             <!-- ブログ記事のリスト -->
         </ul>
     </div>
-    <py-script>
-        import js
-        from pyodide.http import pyfetch
+    <script>
+        $(document).ready(function() {
+            const posts = ["posts/post1.md", "posts/post2.md", "posts/post3.md"];
+            const blogList = $('#blog-list');
 
-        async def fetch_and_display_posts():
-            blog_list = js.document.getElementById('blog-list')
-            posts = ["post1.md", "post2.md", "post3.md"]
-            for post in posts:
-                response = await pyfetch(f"/posts/{post}")
-                content = await response.text()
-                li = js.document.createElement('li')
-                li.innerHTML = f"<h3>{post[:-3]}</h3><div>{content}</div>"
-                blog_list.appendChild(li)
-
-        fetch_and_display_posts()
-    </py-script>
+            posts.forEach(post => {
+                $.get(post, function(data) {
+                    const htmlContent = marked(data);
+                    const li = $('<li></li>');
+                    li.html(`<h3>${post.split('/').pop().split('.')[0]}</h3><div>${htmlContent}</div>`);
+                    blogList.append(li);
+                });
+            });
+        });
+    </script>
 </body>
 </html>
