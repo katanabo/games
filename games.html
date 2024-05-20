@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Retro Home Page</title>
+    <title>ゲーム一覧 - My Retro Home Page</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DotGothic16&display=swap');
         body {
@@ -40,7 +40,27 @@
         .content {
             padding: 20px;
         }
+        .game-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .game-item {
+            margin: 10px;
+        }
+        .game-item img {
+            width: 150px;
+            height: 150px;
+            border: 2px solid #fff;
+        }
+        .game-item p {
+            margin: 5px 0;
+        }
         @media (max-width: 600px) {
+            .game-item img {
+                width: 100px;
+                height: 100px;
+            }
             nav a {
                 display: block;
                 margin: 10px 0;
@@ -57,7 +77,25 @@
         </nav>
     </header>
     <div class="content">
-        <p>Welcome to my retro-themed home page! Use the navigation links above to explore my blog and games.</p>
+        <h2>ゲーム一覧</h2>
+        <div class="game-list" id="game-list">
+            <!-- ゲームのリスト -->
+        </div>
     </div>
+    <script>
+        const games = [
+            { title: 'ゲーム1', thumbnail: 'game1.jpg' },
+            { title: 'ゲーム2', thumbnail: 'game2.jpg' },
+            { title: 'ゲーム3', thumbnail: 'game3.jpg' }
+        ];
+
+        const gameList = document.getElementById('game-list');
+        games.forEach(game => {
+            const div = document.createElement('div');
+            div.className = 'game-item';
+            div.innerHTML = `<img src="${game.thumbnail}" alt="${game.title}"><p>${game.title}</p>`;
+            gameList.appendChild(div);
+        });
+    </script>
 </body>
 </html>

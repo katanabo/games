@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Retro Home Page</title>
+    <title>ブログ - My Retro Home Page</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DotGothic16&display=swap');
         body {
@@ -40,6 +40,16 @@
         .content {
             padding: 20px;
         }
+        .blog-list {
+            list-style: none;
+            padding: 0;
+        }
+        .blog-list li {
+            background: #333;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #fff;
+        }
         @media (max-width: 600px) {
             nav a {
                 display: block;
@@ -47,6 +57,8 @@
             }
         }
     </style>
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
 </head>
 <body>
     <header>
@@ -57,7 +69,26 @@
         </nav>
     </header>
     <div class="content">
-        <p>Welcome to my retro-themed home page! Use the navigation links above to explore my blog and games.</p>
+        <h2>ブログ</h2>
+        <ul class="blog-list" id="blog-list">
+            <!-- ブログ記事のリスト -->
+        </ul>
     </div>
+    <py-script>
+        import js
+        from pyodide.http import pyfetch
+
+        async def fetch_and_display_posts():
+            blog_list = js.document.getElementById('blog-list')
+            posts = ["post1.md", "post2.md", "post3.md"]
+            for post in posts:
+                response = await pyfetch(f"/posts/{post}")
+                content = await response.text()
+                li = js.document.createElement('li')
+                li.innerHTML = f"<h3>{post[:-3]}</h3><div>{content}</div>"
+                blog_list.appendChild(li)
+
+        fetch_and_display_posts()
+    </py-script>
 </body>
 </html>

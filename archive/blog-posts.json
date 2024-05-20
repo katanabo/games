@@ -1,0 +1,5 @@
+[
+    { "title": "ブログ記事1", "date": "2024-05-20", "file": "posts/post1.md" },
+    { "title": "ブログ記事2", "date": "2024-05-19", "file": "posts/post2.md" },
+    { "title": "ブログ記事3", "date": "2024-05-18", "file": "posts/post3.md" }
+]
