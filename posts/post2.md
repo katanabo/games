@@ -11,7 +11,8 @@
 
 1. **iframeの設定**:
    - HTML内にiframeを配置し、記事のURLを指定します。
-   ```html
+
+ ```html
    <!DOCTYPE html>
    <html lang="ja">
    <head>
@@ -31,7 +32,9 @@
    </body>
    </html>
 ```
-2. JavaScriptでの制御:
+
+2. **JavaScriptでの制御:**
+
 ```javascript
 jQueryを使用して、クリックイベントでiframeに記事を読み込みます。
 javascript
