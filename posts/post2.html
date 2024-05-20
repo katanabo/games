@@ -91,49 +91,48 @@
           : 'default'
     });
   </script>
-<h3 id="postspost2md">posts/post2.md</h3>
-<pre class="hljs"><code><div><span class="hljs-section"># iframeを使用したブログ記事の表示</span>
-
-今回は、iframeを使用してブログ記事を表示する方法について説明します。iframeを使用することで、記事を別ページに読み込み、簡単に管理することができます。
-
-<span class="hljs-section">## iframeの利点</span>
-<span class="hljs-bullet">
-- </span>記事の独立性: 各記事を別のHTMLファイルとして管理できるため、更新や修正が容易です。
-<span class="hljs-bullet">- </span>デザインの統一: メインページと記事ページでデザインを統一することができます。
-
-<span class="hljs-section">## 実装手順</span>
-<span class="hljs-bullet">
-1. </span><span class="hljs-strong">**iframeの設定**</span>:
-<span class="hljs-bullet">   - </span>HTML内にiframeを配置し、記事のURLを指定します。
-   <span class="hljs-code">```</span>html
-   <span class="xml"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span></span>
-   <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"ja"</span>&gt;</span></span>
-   <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
-<span class="hljs-code">       &lt;meta charset="UTF-8"&gt;</span>
-<span class="hljs-code">       &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span>
-<span class="hljs-code">       &lt;title&gt;ブログページ&lt;/title&gt;</span>
-<span class="hljs-code">       &lt;link rel="stylesheet" href="style.css"&gt;</span>
-   <span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
-   <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
-<span class="hljs-code">       &lt;header&gt;</span>
-<span class="hljs-code">           &lt;h1&gt;ブログページ&lt;/h1&gt;</span>
-<span class="hljs-code">       &lt;/header&gt;</span>
-<span class="hljs-code">       &lt;main&gt;</span>
-<span class="hljs-code">           &lt;iframe src="post.html" width="100%" height="600px"&gt;&lt;/iframe&gt;</span>
-<span class="hljs-code">       &lt;/main&gt;</span>
-<span class="hljs-code">       &lt;script src="script.js"&gt;&lt;/script&gt;</span>
-   <span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
-   <span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+<h1 id="iframe%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%97%E3%81%9F%E3%83%96%E3%83%AD%E3%82%B0%E8%A8%98%E4%BA%8B%E3%81%AE%E8%A1%A8%E7%A4%BA">iframeを使用したブログ記事の表示</h1>
+<p>今回は、iframeを使用してブログ記事を表示する方法について説明します。iframeを使用することで、記事を別ページに読み込み、簡単に管理することができます。</p>
+<h2 id="iframe%E3%81%AE%E5%88%A9%E7%82%B9">iframeの利点</h2>
+<ul>
+<li>記事の独立性: 各記事を別のHTMLファイルとして管理できるため、更新や修正が容易です。</li>
+<li>デザインの統一: メインページと記事ページでデザインを統一することができます。</li>
+</ul>
+<h2 id="%E5%AE%9F%E8%A3%85%E6%89%8B%E9%A0%86">実装手順</h2>
+<ol>
+<li><strong>iframeの設定</strong>:
+<ul>
+<li>HTML内にiframeを配置し、記事のURLを指定します。</li>
+</ul>
+<pre class="hljs"><code><div><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"ja"</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">charset</span>=<span class="hljs-string">"UTF-8"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">meta</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"viewport"</span> <span class="hljs-attr">content</span>=<span class="hljs-string">"width=device-width, initial-scale=1.0"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>ブログページ<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">link</span> <span class="hljs-attr">rel</span>=<span class="hljs-string">"stylesheet"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"style.css"</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">header</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>ブログページ<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">main</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">iframe</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"post.html"</span> <span class="hljs-attr">width</span>=<span class="hljs-string">"100%"</span> <span class="hljs-attr">height</span>=<span class="hljs-string">"600px"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">iframe</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">main</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">"script.js"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span>
 </div></code></pre>
-<ol start="2">
-<li>JavaScriptでの制御:</li>
+</li>
 </ol>
-<pre class="hljs"><code><div>jQueryを使用して、クリックイベントでiframeに記事を読み込みます。
+<pre class="hljs"><code><div>2. JavaScriptでの制御:
+```javascript
+jQueryを使用して、クリックイベントでiframeに記事を読み込みます。
 javascript
 コードをコピーする
-$(<span class="hljs-built_in">document</span>).ready(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-    $(<span class="hljs-string">'button'</span>).click(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-        $(<span class="hljs-string">'iframe'</span>).attr(<span class="hljs-string">'src'</span>, <span class="hljs-string">'post.html'</span>);
+$(document).ready(function() {
+    $('button').click(function() {
+        $('iframe').attr('src', 'post.html');
     });
 });
 </div></code></pre>
