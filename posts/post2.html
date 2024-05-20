@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>post2.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h3 id="postspost2md">posts/post2.md</h3>
+<pre class="hljs"><code><div><span class="hljs-section"># iframeを使用したブログ記事の表示</span>
+
+今回は、iframeを使用してブログ記事を表示する方法について説明します。iframeを使用することで、記事を別ページに読み込み、簡単に管理することができます。
+
+<span class="hljs-section">## iframeの利点</span>
+<span class="hljs-bullet">
+- </span>記事の独立性: 各記事を別のHTMLファイルとして管理できるため、更新や修正が容易です。
+<span class="hljs-bullet">- </span>デザインの統一: メインページと記事ページでデザインを統一することができます。
+
+<span class="hljs-section">## 実装手順</span>
+<span class="hljs-bullet">
+1. </span><span class="hljs-strong">**iframeの設定**</span>:
+<span class="hljs-bullet">   - </span>HTML内にiframeを配置し、記事のURLを指定します。
+   <span class="hljs-code">```</span>html
+   <span class="xml"><span class="hljs-meta">&lt;!DOCTYPE <span class="hljs-meta-keyword">html</span>&gt;</span></span>
+   <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">html</span> <span class="hljs-attr">lang</span>=<span class="hljs-string">"ja"</span>&gt;</span></span>
+   <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span></span>
+<span class="hljs-code">       &lt;meta charset="UTF-8"&gt;</span>
+<span class="hljs-code">       &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span>
+<span class="hljs-code">       &lt;title&gt;ブログページ&lt;/title&gt;</span>
+<span class="hljs-code">       &lt;link rel="stylesheet" href="style.css"&gt;</span>
+   <span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span></span>
+   <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span></span>
+<span class="hljs-code">       &lt;header&gt;</span>
+<span class="hljs-code">           &lt;h1&gt;ブログページ&lt;/h1&gt;</span>
+<span class="hljs-code">       &lt;/header&gt;</span>
+<span class="hljs-code">       &lt;main&gt;</span>
+<span class="hljs-code">           &lt;iframe src="post.html" width="100%" height="600px"&gt;&lt;/iframe&gt;</span>
+<span class="hljs-code">       &lt;/main&gt;</span>
+<span class="hljs-code">       &lt;script src="script.js"&gt;&lt;/script&gt;</span>
+   <span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span></span>
+   <span class="xml"><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span></span>
+</div></code></pre>
+<ol start="2">
+<li>JavaScriptでの制御:</li>
+</ol>
+<pre class="hljs"><code><div>jQueryを使用して、クリックイベントでiframeに記事を読み込みます。
+javascript
+コードをコピーする
+$(<span class="hljs-built_in">document</span>).ready(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    $(<span class="hljs-string">'button'</span>).click(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+        $(<span class="hljs-string">'iframe'</span>).attr(<span class="hljs-string">'src'</span>, <span class="hljs-string">'post.html'</span>);
+    });
+});
+</div></code></pre>
+<ol start="3">
+<li>CSSでのデザイン:</li>
+</ol>
+<pre class="hljs"><code><div><span class="hljs-selector-tag">iframe</span>内のコンテンツが見やすくなるようにスタイルを設定します。
+<span class="hljs-selector-tag">css</span>
+コードをコピーする
+<span class="hljs-selector-tag">iframe</span> {
+    <span class="hljs-attribute">border</span>: none;
+}
+</div></code></pre>
+<p>結論<br>
+iframeを使用することで、ブログ記事の表示が簡単に管理でき、デザインの統一性も保つことができます。</p>
+
+</body>
+</html>

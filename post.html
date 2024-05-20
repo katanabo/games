@@ -6,6 +6,7 @@
     <title>ブログ記事 - My Retro Home Page</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=DotGothic16&family=Roboto&display=swap');
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/styles/default.min.css');
         body {
             font-family: 'Press Start 2P', 'DotGothic16', cursive;
             background-color: #000;
@@ -55,6 +56,12 @@
             font-size: 0.8em; /* 文字のサイズを少し小さく */
             line-height: 1.5;
         }
+        pre code {
+            font-family: 'Roboto', sans-serif;
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+        }
         @media (max-width: 600px) {
             nav a {
                 display: block;
@@ -76,6 +83,7 @@
     <div class="content" id="post-content">
         <!-- ブログ記事の内容 -->
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.3.1/highlight.min.js"></script>
     <script>
         $(document).ready(function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -88,6 +96,9 @@
                     const htmlContent = marked.parse(content);
                     const postContent = $('#post-content');
                     postContent.html(`<h1>${title}</h1>${htmlContent}`);
+                    $('pre code').each((i, block) => {
+                        hljs.highlightElement(block);
+                    });
                 });
             } else {
                 $('#post-content').html('<p>記事が見つかりませんでした。</p>');
