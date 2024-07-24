@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MBTIジョーク診断アプリ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+        }
+        .question {
+            font-size: 1.2em;
+            margin: 20px 0;
+            transition: opacity 0.3s ease;
+        }
+        .choices {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .choices label {
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            padding-left: 40px;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .choices label::before,
+        .choices label::after {
+            content: "";
+            display: block;
+            border-radius: 50%;
+            position: absolute;
+            transform: translateY(-50%);
+            top: 50%;
+        }
+        .choices label::before {
+            background-color: #fff;
+            border: 2px solid #ccc;
+            height: 24px;
+            width: 24px;
+            left: 11px;
+        }
+        .choices label::after {
+            background-color: currentColor;
+            opacity: 0;
+            height: 25px;
+            width: 25px;
+            left: 12px;
+        }
+        .choices input[type="radio"] {
+            display: none;
+        }
+        .choices input[type="radio"]:checked + label::after {
+            opacity: 1;
+        }
+        .choices label:nth-child(2)::before {
+            border-color: #32CD32;
+        }
+        .choices label:nth-child(4)::before {
+            border-color: #7FFF00;
+        }
+        .choices label:nth-child(6)::before {
+            border-color: #CCCCCC;
+        }
+        .choices label:nth-child(8)::before {
+            border-color: #BA55D3;
+        }
+        .choices label:nth-child(10)::before {
+            border-color: #9400D3;
+        }
+        .choices label:nth-child(2)::after {
+            background-color: #32CD32;
+        }
+        .choices label:nth-child(4)::after {
+            background-color: #7FFF00;
+        }
+        .choices label:nth-child(6)::after {
+            background-color: #CCCCCC;
+        }
+        .choices label:nth-child(8)::after {
+            background-color: #BA55D3;
+        }
+        .choices label:nth-child(10)::after {
+            background-color: #9400D3;
+        }
+        .submit-btn {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            margin-top: 20px;
+        }
+        .result {
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+        .faded {
+            opacity: 0.5;
+        }
+        .agree-disagree {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            color: #666;
+            margin: 5px 0;
+        }
+        .agree-disagree span:first-child {
+            color: #32CD32;
+        }
+        .agree-disagree span:last-child {
+            color: #9400D3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="quizForm">
+            <div class="question" id="question1">
+                <div>自分は宇宙っぽいところがある。</div>
+                <br>
+                <div class="choices">
+                    <input type="radio" id="q1-5" name="q1" value="5" onclick="fadeQuestion('question1')">
+                    <label for="q1-5"></label>
+                    <input type="radio" id="q1-4" name="q1" value="4" onclick="fadeQuestion('question1')">
+                    <label for="q1-4"></label>
+                    <input type="radio" id="q1-3" name="q1" value="3" onclick="fadeQuestion('question1')">
+                    <label for="q1-3"></label>
+                    <input type="radio" id="q1-2" name="q1" value="2" onclick="fadeQuestion('question1')">
+                    <label for="q1-2"></label>
+                    <input type="radio" id="q1-1" name="q1" value="1" onclick="fadeQuestion('question1')">
+                    <label for="q1-1"></label>
+                </div>
+                <div class="agree-disagree">
+                    <span>同意する</span>
+                    <span>同意しない</span>
+                </div>
+            </div>
+
+            <div class="question" id="question2">
+                <div>パソコンの周辺機器に向いている気がする。</div>
+                <br>
+                <div class="choices">
+                    <input type="radio" id="q2-5" name="q2" value="5" onclick="fadeQuestion('question2')">
+                    <label for="q2-5"></label>
+                    <input type="radio" id="q2-4" name="q2" value="4" onclick="fadeQuestion('question2')">
+                    <label for="q2-4"></label>
+                    <input type="radio" id="q2-3" name="q2" value="3" onclick="fadeQuestion('question2')">
+                    <label for="q2-3"></label>
+                    <input type="radio" id="q2-2" name="q2" value="2" onclick="fadeQuestion('question2')">
+                    <label for="q2-2"></label>
+                    <input type="radio" id="q2-1" name="q2" value="1" onclick="fadeQuestion('question2')">
+                    <label for="q2-1"></label>
+                </div>
+                <div class="agree-disagree">
+                    <span>同意する</span>
+                    <span>同意しない</span>
+                </div>
+            </div>
+
+            <div class="question" id="question3">
+                <div>自分の計画は完璧である。</div>
+                <br>
+                <div class="choices">
+                    <input type="radio" id="q3-5" name="q3" value="5" onclick="fadeQuestion('question3')">
+                    <label for="q3-5"></label>
+                    <input type="radio" id="q3-4" name="q3" value="4" onclick="fadeQuestion('question3')">
+                    <label for="q3-4"></label>
+                    <input type="radio" id="q3-3" name="q3" value="3" onclick="fadeQuestion('question3')">
+                    <label for="q3-3"></label>
+                    <input type="radio" id="q3-2" name="q3" value="2" onclick="fadeQuestion('question3')">
+                    <label for="q3-2"></label>
+                    <input type="radio" id="q3-1" name="q3" value="1" onclick="fadeQuestion('question3')">
+                    <label for="q3-1"></label>
+                </div>
+                <div class="agree-disagree">
+                    <span>同意する</span>
+                    <span>同意しない</span>
+                </div>
+            </div>
+
+            <div class="question" id="question4">
+                <div>他人の気持ちをすぐに察することができる。</div>
+                <br>
+                <div class="choices">
+                    <input type="radio" id="q4-5" name="q4" value="5" onclick="fadeQuestion('question4')">
+                    <label for="q4-5"></label>
+                    <input type="radio" id="q4-4" name="q4" value="4" onclick="fadeQuestion('question4')">
+                    <label for="q4-4"></label>
+                    <input type="radio" id="q4-3" name="q4" value="3" onclick="fadeQuestion('question4')">
+                    <label for="q4-3"></label>
+                    <input type="radio" id="q4-2" name="q4" value="2" onclick="fadeQuestion('question4')">
+                    <label for="q4-2"></label>
+                    <input type="radio" id="q4-1" name="q4" value="1" onclick="fadeQuestion('question4')">
+                    <label for="q4-1"></label>
+                </div>
+                <div class="agree-disagree">
+                    <span>同意する</span>
+                    <span>同意しない</span>
+                </div>
+            </div>
+
+            <div class="question" id="question5">
+                <div>未来のことを常に考えている。</div>
+                <br>
+                <div class="choices">
+                    <input type="radio" id="q5-5" name="q5" value="5" onclick="fadeQuestion('question5')">
+                    <label for="q5-5"></label>
+                    <input type="radio" id="q5-4" name="q5" value="4" onclick="fadeQuestion('question5')">
+                    <label for="q5-4"></label>
+                    <input type="radio" id="q5-3" name="q5" value="3" onclick="fadeQuestion('question5')">
+                    <label for="q5-3"></label>
+                    <input type="radio" id="q5-2" name="q5" value="2" onclick="fadeQuestion('question5')">
+                    <label for="q5-2"></label>
+                    <input type="radio" id="q5-1" name="q5" value="1" onclick="fadeQuestion('question5')">
+                    <label for="q5-1"></label>
+                </div>
+                <div class="agree-disagree">
+                    <span>同意する</span>
+                    <span>同意しない</span>
+                </div>
+            </div>
+
+            <button type="button" class="submit-btn" onclick="submitQuiz()">結果を見る</button>
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+    <script>
+        const results = [
+            "APEC: Asia-Pacific Economic Cooperation",
+            "OECD: Organisation for Economic Co-operation and Development",
+            "SDGs: Sustainable Development Goals",
+            "JAXA: Japan Aerospace Exploration Agency",
+            "HDMI: High-Definition Multimedia Interface",
+            "HTML: HyperText Markup Language",
+            "PPAP: Pen-Pineapple-Apple-Pen",
+            "ASAP: As Soon As Possible",
+            "YMCA: Young Men's Christian Association",
+            "TOTO: Toyo Toki Co., Ltd.",
+            "GAFA: Google, Apple, Facebook, Amazon",
+            "CERN: European Organization for Nuclear Research",
+            "IAEA: International Atomic Energy Agency",
+            "FIFA: Fédération Internationale de Football Association",
+            "PDCA: Plan-Do-Check-Act",
+            "YMCA: Young Men's Christian Association"
+        ];
+
+        function fadeQuestion(questionId) {
+            document.getElementById(questionId).classList.add('faded');
+        }
+
+        function submitQuiz() {
+            const form = document.getElementById('quizForm');
+            const formData = new FormData(form);
+            let score = 0;
+            let totalQuestions = 0;
+
+            for (let value of formData.values()) {
+                score += parseInt(value);
+                totalQuestions++;
+            }
+
+            const index = Math.floor((score / (totalQuestions * 5)) * 16);
+            document.getElementById('result').textContent = results[index];
+        }
+    </script>
+</body>
+</html>

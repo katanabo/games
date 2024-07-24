@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アンケートサイト</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        label {
+            cursor: pointer;
+            padding-left: 40px; /* Updated padding for larger circle */
+            position: relative;
+            display: block; /* Make the label behave as a block for better spacing */
+            margin-bottom: 10px; /* Add space between options */
+        }
+
+        label::before,
+        label::after {
+            content: "";
+            display: block;
+            border-radius: 50%;
+            position: absolute;
+            transform: translateY(-50%);
+            top: 50%;
+        }
+
+        label::before {
+            background-color: #fff;
+            border: 2px solid #008000; /* Slightly thicker border for visibility */
+            height: 30px; /* Increased size */
+            width: 30px; /* Increased size */
+            left: 5px;
+        }
+
+        label::after {
+            background-color: #008000;
+            opacity: 0;
+            height: 32px; /* Increased inner circle size, but smaller than outer to create a border effect */
+            width: 32px; /* Match height for a perfect circle */
+            left: 6px; /* Adjusted position to center the inner circle */
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        input[type="radio"]:checked + label::after {
+            opacity: 1;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-width: 400px;
+            margin: 20px auto;
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>アンケート</h1>
+        <form>
+            <div class="question">
+                <p>お気に入りの色は何ですか？</p>
+                <input type="radio" id="red" name="color" value="red">
+                <label for="red">赤</label><br>
+                <input type="radio" id="green" name="color" value="green">
+                <label for="green">緑</label><br>
+                <input type="radio" id="blue" name="color" value="blue">
+                <label for="blue">青</label>
+            </div>
+            <div class="question">
+                <p>好きな食べ物は何ですか？</p>
+                <input type="radio" id="sushi" name="food" value="sushi">
+                <label for="sushi">寿司</label><br>
+                <input type="radio" id="ramen" name="food" value="ramen">
+                <label for="ramen">ラーメン</label><br>
+                <input type="radio" id="curry" name="food" value="curry">
+                <label for="curry">カレー</label>
+            </div>
+            <button type="submit">送信</button>
+        </form>
+    </div>
+</body>
+</html>

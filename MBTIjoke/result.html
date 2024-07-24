@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>診断結果</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 600px;
+        }
+        .result-title {
+            font-size: 1.5em;
+            margin-top: 20px;
+        }
+        .result-type {
+            font-size: 2em;
+            margin-top: 10px;
+        }
+        .result-description {
+            margin-top: 20px;
+            font-size: 1em;
+        }
+        .result-image {
+            align-items: center;
+        }
+        #resultImage{
+            width: 50%;
+            height: 50%;
+        }
+        .back-btn {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="result-title">あなたの性格タイプ:</div>
+        <div class="result-type" id="resultType"></div>
+        <div class="result-image">
+            <img id="resultImage" src="" alt="結果画像" />
+        </div>
+        <div class="result-description" id="resultDescription"></div>
+        <button class="back-btn" onclick="goBack()">戻る</button>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const result = localStorage.getItem('quizResult');
+            const resultType = result.split(':')[1].trim();
+            const resultDescription = "提唱者は静かなビジョナリーです。理想主義者として周りの人をインスパイアしながら精神的に働くことが多いでしょう。";
+
+            document.getElementById('resultType').textContent = resultType;
+            document.getElementById('resultDescription').textContent = resultDescription;
+
+            // 結果画像の設定
+            document.getElementById('resultImage').src = "img/img01.png";
+        });
+
+        function goBack() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

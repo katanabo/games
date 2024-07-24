@@ -75,7 +75,7 @@
 </head>
 <body>
     <header>
-        <a href="index.html"><h1>My Retro Home Page</h1></a>
+        <a href="index.html"><h1>Tech Cadence</h1></a>
         <nav>
             <a href="blog.html">ブログ</a>
             <a href="games.html">ゲーム一覧</a>
@@ -87,27 +87,27 @@
             <!-- ブログ記事のリスト -->
         </ul>
     </div>
-    <script>
-        $(document).ready(function() {
-            const posts = [
-                { file: "posts/post1.md" },
-                { file: "posts/post2.md" },
-                { file: "posts/post3.md" }
-            ];
-            const blogList = $('#blog-list');
-    
-            posts.forEach(post => {
-                $.get(post.file, function(data) {
-                    const lines = data.split('\n');
-                    const title = lines[0].replace(/^#\s*/, ''); // Markdownのタイトル行を取得
-                    const excerpt = lines.slice(1).join(' ').replace(/<\/?[^>]+(>|$)/g, "").slice(0, 100); // 最初の100文字を抜粋し、HTMLタグを除去
-                    const li = $('<li></li>');
-                    li.html(`<h3>${title}</h3><p>${excerpt}...</p>`);
-                    li.click(() => window.location.href = `post.html?file=${post.file}`);
-                    blogList.append(li);
-                });
+<script>
+    $(document).ready(function() {
+        const posts = [
+            { file: "posts/post1.md" },
+            { file: "posts/post2.md" },
+            { file: "posts/post3.md" }
+        ];
+        const blogList = $('#blog-list');
+
+        posts.forEach(post => {
+            $.get(post.file, function(data) {
+                const lines = data.split('\n');
+                const title = lines[0].replace(/^#\s*/, ''); // Markdownのタイトル行を取得
+                const excerpt = lines.slice(1).join(' ').replace(/<\/?[^>]+(>|$)/g, "").slice(0, 100); // 最初の100文字を抜粋し、HTMLタグを除去
+                const li = $('<li></li>');
+                li.html(`<h3>${title}</h3><p>${excerpt}...</p>`);
+                li.click(() => window.location.href = `post.html?file=${post.file}`);
+                blogList.append(li);
             });
         });
-    </script>
+    });
+</script>T
 </body>
 </html>

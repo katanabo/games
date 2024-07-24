@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>進捗管理アプリ</title>
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .upload-area {
+            margin: 20px 0;
+        }
+        .progress-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px 0;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .chapter-progress {
+            margin: 10px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .task-list {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+        .task-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .task-item label {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .task-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .chart-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+        .chart {
+            width: 300px;
+            height: 300px;
+            margin: 20px;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .upload-label {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/service-worker.js');
+            }
+
+            google.charts.load('current', { packages: ['corechart'] });
+            google.charts.setOnLoadCallback(initApp);
+
+            function initApp() {
+                const progressContainer = document.querySelector('.progress-container');
+                const fileInput = document.getElementById('file-input');
+
+                fileInput.addEventListener('change', handleFileUpload);
+
+                function handleFileUpload(event) {
+                    const file = event.target.files[0];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const text = e.target.result;
+                        const rows = text.split('\n').map(row => row.split(','));
+
+                        localStorage.setItem('tasks', JSON.stringify(rows));
+                        displayProgress(rows);
+                    };
+                    reader.readAsText(file);
+                }
+
+                function displayProgress(data) {
+                    progressContainer.innerHTML = '';
+                    const chapterMap = {};
+
+                    data.forEach(([task, title, status]) => {
+                        const [chapter] = task.split('-');
+                        if (!chapterMap[chapter]) {
+                            chapterMap[chapter] = { tasks: [], total: 0, completed: 0 };
+                        }
+                        chapterMap[chapter].tasks.push({ task, title, status });
+                        chapterMap[chapter].total += 1;
+                        if (status === '完了') {
+                            chapterMap[chapter].completed += 1;
+                        }
+                    });
+
+                    const chartContainer = document.createElement('div');
+                    chartContainer.className = 'chart-container';
+                    progressContainer.appendChild(chartContainer);
+
+                    for (const [chapter, { tasks, total, completed }] of Object.entries(chapterMap)) {
+                        const chapterProgress = document.createElement('div');
+                        chapterProgress.className = 'chapter-progress';
+
+                        const taskList = document.createElement('ul');
+                        taskList.className = 'task-list';
+
+                        tasks.forEach(({ task, title, status }) => {
+                            const taskItem = document.createElement('li');
+                            taskItem.className = 'task-item';
+                            taskItem.innerHTML = `
+                                <input type="checkbox" ${status === '完了' ? 'checked' : ''} data-task="${task}" id="checkbox-${task}">
+                                <label for="checkbox-${task}">${task} - ${title}</label>
+                            `;
+                            taskList.appendChild(taskItem);
+                        });
+
+                        const chartId = `chart-${chapter}`;
+                        const chartDiv = document.createElement('div');
+                        chartDiv.className = 'chart';
+                        chartDiv.id = chartId;
+
+                        chapterProgress.innerHTML = `<h3>章 ${chapter}</h3>`;
+                        chapterProgress.appendChild(chartDiv);
+                        chapterProgress.appendChild(taskList);
+                        chartContainer.appendChild(chapterProgress);
+
+                        drawChart(chartId, completed, total);
+
+                        taskList.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                            checkbox.addEventListener('change', handleCheckboxChange);
+                        });
+
+                        taskList.querySelectorAll('label').forEach(label => {
+                            label.addEventListener('click', (event) => {
+                                event.preventDefault();
+                                const checkbox = document.getElementById(label.htmlFor);
+                                checkbox.checked = !checkbox.checked;
+                                handleCheckboxChange({ target: checkbox });
+                            });
+                        });
+                    }
+                }
+
+                function handleCheckboxChange(event) {
+                    const checkbox = event.target;
+                    const task = checkbox.dataset.task;
+                    const tasks = JSON.parse(localStorage.getItem('tasks'));
+
+                    tasks.forEach(row => {
+                        if (row[0] === task) {
+                            row[2] = checkbox.checked ? '完了' : '未完了';
+                        }
+                    });
+
+                    localStorage.setItem('tasks', JSON.stringify(tasks));
+                    updateChart(task.split('-')[0]);
+                }
+
+                function updateChart(chapter) {
+                    const tasks = JSON.parse(localStorage.getItem('tasks'));
+                    const chapterTasks = tasks.filter(row => row[0].startsWith(chapter));
+                    const completed = chapterTasks.filter(row => row[2] === '完了').length;
+                    const total = chapterTasks.length;
+                    const chartId = `chart-${chapter}`;
+                    drawChart(chartId, completed, total);
+                }
+
+                function drawChart(elementId, completed, total) {
+                    const data = google.visualization.arrayToDataTable([
+                        ['Status', 'Count'],
+                        ['完了', completed],
+                        ['未完了', total - completed]
+                    ]);
+
+                    const options = {
+                        pieHole: 0.4,
+                        pieSliceTextStyle: {
+                            color: 'black',
+                        },
+                        legend: 'none',
+                        slices: {
+                            0: { color: '#4caf50' },
+                            1: { color: '#e0e0e0' }
+                        },
+                        chartArea: {
+                            width: '90%',
+                            height: '90%'
+                        },
+                        width: 300,
+                        height: 300
+                    };
+
+                    const chart = new google.visualization.PieChart(document.getElementById(elementId));
+                    chart.draw(data, options);
+                }
+
+                const storedTasks = localStorage.getItem('tasks');
+                if (storedTasks) {
+                    const tasks = JSON.parse(storedTasks);
+                    displayProgress(tasks);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <h1>進捗管理アプリ</h1>
+    <div class="upload-area">
+        <label class="upload-label" for="file-input">CSVファイルをアップロード</label>
+        <input type="file" id="file-input" accept=".csv">
+    </div>
+    <div class="progress-container"></div>
+</body>
+</html>
